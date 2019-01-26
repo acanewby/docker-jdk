@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Detect if we're running as an automated Docker Hub build and react accordingly
+if [ -z "$DOCKERFILE_PATH" ]; then
+
+    # We're running interactively
+
+    # Bomb out if user hasn't supplied Dockerfile argument
+    if [ -z "$1" ]; then
+        echo "You must provide the Dockerfile as arg 1"
+        exit 1
+    else
+        DOCKERFILE_PATH=$1
+    fi
+
+    # We'll need a Docker repo too
+    DOCKER_REPO=jdk
+fi
+
+# If we're here then we're either in Docker Hub automated build
+# or we're interactive but we know the Dockerfile explicitly
+# and have set it to the same env variable used by auto build
+
+# Extract image tag from Dockerfile extension
+CACHE_TAG=`echo $DOCKERFILE_PATH | sed 's/^.*\(Dockerfile\.\)//'`
+
+# Do the build
+docker build -f $DOCKERFILE_PATH -t $DOCKER_REPO:$CACHE_TAG .
+
+
