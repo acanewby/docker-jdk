@@ -9,16 +9,16 @@ RUN apt-get update && \
 
 # General environment setup
 ARG SCRATCH=/scratch
-ARG JDK_VER=11
-ARG JDK_ARCHIVE=${SCRATCH}/jdk-$JDK_VER.tar.gz
+ARG JDK_VER=8
+ARG JDK_ARCHIVE=${SCRATCH}/jdk-${JDK_VER}.tar.gz
 
 WORKDIR /opt/java/jdk
 
 # Install OpenJDK
 RUN mkdir -p ${SCRATCH} && \
-    curl https://download.java.net/java/GA/jdk11/13/GPL/openjdk-11.0.1_linux-x64_bin.tar.gz -o ${JDK_ARCHIVE} && \
+    curl --location --header "Cookie: oraclelicense=accept-securebackup-cookie" https://download.oracle.com/otn-pub/java/jdk/8u202-b08/1961070e4c9b4e26a04e7f5a083f551e/jdk-8u202-linux-x64.tar.gz -o ${JDK_ARCHIVE} && \
     tar -xvzf ${JDK_ARCHIVE} && \
-    ln -s ./jdk-11.0.1/ $JDK_VER && \
+    ln -s ./jdk1.8.0_202/ $JDK_VER && \
     rm -f ${JDK_ARCHIVE}
 
 ENV JAVA_HOME /opt/java/jdk/$JDK_VER
